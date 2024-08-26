@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import { Document, Types } from 'mongoose';
 
 export type TicketDocument = Ticket & Document;
 
@@ -14,6 +14,9 @@ export class Ticket {
 
     @Prop({ required: true })
     description: string;
+
+    @Prop({ type: Types.ObjectId, ref: 'Conversation' })
+    conversationId: Types.ObjectId;
 
     @Prop({ default: "En attente" })
     status: string;
