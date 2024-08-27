@@ -25,5 +25,6 @@ import { UserModule } from './user/user.module';
   ],
   controllers: [AppController],
   providers: [AppService, EmailService, ChatGateway, TicketService, ConversationService, MessagesService],
+  exports: [EmailService]
 })
 export class AppModule { }
