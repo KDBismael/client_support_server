@@ -25,7 +25,7 @@ export class UserService {
   }
 
   async findOne(query: any): Promise<any> {
-    return await this.userModel.findOne(query).select('+password');
+    return await this.userModel.findOne(query).select('-password');
   }
 
 
@@ -45,7 +45,7 @@ export class UserService {
     return this.userModel.findOneAndUpdate(query, payload, {
       new: true,
       upsert: true,
-    });
+    }).select('-password');
   }
 
   async findOneAndRemove(query: any): Promise<any> {

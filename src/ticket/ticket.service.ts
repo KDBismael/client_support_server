@@ -16,10 +16,10 @@ export class TicketService {
   async create(createTicketDto: CreateTicketDto) {
     try {
       const ticket = await this.ticketModel.create(createTicketDto)
-      this.emailService.sendMail(createTicketDto.email, "Accuser de creation de votre ticket", createTicketDto.description);
+      await this.emailService.sendMail(createTicketDto.email, "Accuser de creation de votre ticket", createTicketDto.description);
       return ticket;
     } catch (error) {
-      throw new HttpException("Erro creating the ticket", HttpStatus.EXPECTATION_FAILED)
+      throw new HttpException("Error creating the ticket", HttpStatus.EXPECTATION_FAILED)
     }
   }
 

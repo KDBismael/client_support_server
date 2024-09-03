@@ -1,6 +1,7 @@
-import { Body, Controller, Get, Post, Res } from '@nestjs/common';
+import { Body, Controller, Get, Post, Res, UseGuards } from '@nestjs/common';
 import { Response } from 'express';
 import { AppService } from './app.service';
+import { JwtAuthGuard } from './auth/guards/jwt-auth.gaurd';
 import { ConversationService } from './conversation/conversation.service';
 import { EmailService, SucessEmailI } from './email/email.service';
 import { MessageDto } from './message.dto';
@@ -23,6 +24,8 @@ export class AppController {
   sendMessage(@Body() messageDto: MessageDto, @Res() res: Response) {
     return this.appService.sendMessage(messageDto, res);
   }
+
+  @UseGuards(JwtAuthGuard)
   @Post('send-email')
   async sendEmail(
     @Body('to') to: string,

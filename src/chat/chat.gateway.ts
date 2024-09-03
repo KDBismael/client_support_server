@@ -41,8 +41,6 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     @ConnectedSocket() client: Socket,
   ): Promise<void> {
     console.log('Message received:', message);
-
-    // Save the message in MongoDB
     const savedMessage = await this.messagesService.createMessage(
       message.sender,
       message.recipient,
@@ -52,7 +50,7 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
     // Emit the message to both the sender and the recipient
     this.server.to(client.id).emit('receiveMessage', savedMessage);
-
+    console.log('Emitting message:', savedMessage);
     // Notify all connected admins about the new message
     // this.server.emit('receiveMessage', savedMessage);
   }
@@ -63,13 +61,13 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     @ConnectedSocket() client: Socket,
   ) {
     const conversation = await this.conversationsService.findOrCreateConversation(data.conversationId, data.ticketId);
-    const messages = await this.messagesService.getConversationMessages(conversation._id);
+    const messages = await this.messagesService.getConversationMessages(conversation._id.toString());
 
-    // Send the conversation data and messages back to the client
     client.emit('conversationHistory', {
       conversationId: conversation._id,
       messages,
     });
+    console.log('Emitting conversation history:', messages);
   }
 
   @SubscribeMessage('loadConversationById')
@@ -81,5 +79,6 @@ export class ChatGateway implements OnGatewayConnection, OnGatewayDisconnect {
     const messages = await this.messagesService.getConversationMessages(conversation._id);
 
     client.emit('conversationHistory', messages);
+    console.log('Emitting conversation history:', messages);
   }
 }

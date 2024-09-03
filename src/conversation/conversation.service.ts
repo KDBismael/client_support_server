@@ -8,17 +8,27 @@ import { Conversation, ConversationDocument } from './entities/conversation.enti
 export class ConversationService {
     constructor(
         @InjectModel(Conversation.name) private conversationModel: Model<ConversationDocument>,
-        private ticketServie: TicketService
+        private ticketService: TicketService
     ) { }
 
     async findOrCreateConversation(conversationId: string, ticketId: string): Promise<any> {
-        console.log(conversationId)
-        let conversation = await this.conversationModel.findById(conversationId);
+        let conversation: any;
+
+        if (conversationId) {
+            try {
+                conversation = await this.conversationModel.findById(conversationId);
+            } catch (error) {
+                console.error(`Invalid conversationId: ${conversationId}`, error);
+                conversation = null;
+            }
+        }
 
         if (!conversation) {
             conversation = new this.conversationModel();
             await conversation.save();
-            await this.ticketServie.update(ticketId, { conversationId: conversation.id })
+            if (ticketId) {
+                await this.ticketService.update(ticketId, { conversationId: conversation.id });
+            }
         }
         return conversation;
     }

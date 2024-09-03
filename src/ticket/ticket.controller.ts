@@ -10,6 +10,7 @@ export class TicketController {
 
   @Post()
   create(@Body() createTicketDto: CreateTicketDto) {
+    console.log(createTicketDto)
     return this.ticketService.create(createTicketDto);
   }
 

@@ -17,7 +17,7 @@ export class AppService {
     switch (body.eventType) {
       case "contact support":
         return res.status(HttpStatus.OK).send({ sucess: true, message: "Entrez votre nom s'il vous plaît", haveFeedBack: false });
-      case "userName":
+      case "username":
         ticketCreation.userName = body.message;
         return res.status(HttpStatus.OK).send({ sucess: true, message: "Entrez votre email s'il vous plaît", haveFeedBack: false });
       case "email":
